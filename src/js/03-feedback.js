@@ -17,10 +17,14 @@ function saveFormData(formData) {
   localStorage.setItem('feedback-form-state', JSON.stringify(formData));
 }
 
+function getFormData() {
+  return localStorage.getItem('feedback-form-state');
+}
+
 function restoreFormData() {
-  const restoredFormData = localStorage.getItem('feedback-form-state');
+  const restoredFormData = JSON.parse(getFormData());
   if (restoredFormData) {
-    const { email, message } = JSON.parse(restoredFormData);
+    const { email, message } = restoredFormData;
     form.elements.email.value = email;
     form.elements.message.value = message;
   }
@@ -29,6 +33,14 @@ function restoreFormData() {
 function handleFormSubmit(event) {
   event.preventDefault();
 
+  const formData = JSON.parse(getFormData());
+
+  if (!formData.email || !formData.message) {
+    alert('All field must be completed!');
+    return;
+  }
+
+  console.log(formData);
   localStorage.removeItem('feedback-form-state');
 
   form.reset();
